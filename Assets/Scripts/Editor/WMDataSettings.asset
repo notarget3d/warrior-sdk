@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144a5203c3a94cf46adfc4e777657e6c, type: 3}
   m_Name: WMDataSettings
   m_EditorClassIdentifier: 
-  currentProject: {fileID: 11400000, guid: 4b42322afbb57d74ba45547722bf033c, type: 2}
+  currentProject: {fileID: 0}
   GamePath: F:\u3d_j08\wm2_build
   GameRunParams: -console -screen-fullscreen 0 -screen-width 800 -screen-height 600
     +sv_cheats 1

@@ -8,7 +8,8 @@ namespace WMSDK
 	public sealed class trigger_hurt : BaseEntityTable
 	{
 		public short damageAmount;
-		public int damageType;
+		[EnumMask(typeof(DamageType), 1)]
+		public int damageType = 1;
 	}
 
 	internal sealed class TriggerHurtComponent : BaseEntityTableComponent

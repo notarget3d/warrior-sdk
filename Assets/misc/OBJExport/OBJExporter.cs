@@ -162,7 +162,7 @@ public class OBJExporter : ScriptableWizard
         //work on export
         StringBuilder sb = new StringBuilder();
         StringBuilder sbMaterials = new StringBuilder();
-        sb.AppendLine("# Export of " + Application.loadedLevelName);
+        sb.AppendLine("# Export of " + UnityEngine.SceneManagement.SceneManager.GetActiveScene());
         sb.AppendLine("# from Aaro4130 OBJ Exporter " + versionString);
         if (generateMaterials)
         {
@@ -334,7 +334,7 @@ public class OBJExporter : ScriptableWizard
         }
         catch (System.Exception ex)
         {
-            Debug.Log("Could not export texture : " + t.name + ". is it readable?");
+            Debug.Log("Could not export texture : " + t.name + ". is it readable? Error: " + ex.Message);
             return "null";
         }
 

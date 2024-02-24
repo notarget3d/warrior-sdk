@@ -7,11 +7,13 @@ namespace WMSDK
 	[Serializable]
 	public sealed class point_hurt : BaseEntityTable
 	{
-		public float radius = 1.0f;
-		public float delay = 1.0f;
+		[Min(0.0f)] public float radius = 1.0f;
+		[Min(0.1f)] public float delay = 1.0f;
 
 		public short damageAmount;
-		public int damageType;
+
+		[EnumMask(typeof(DamageType), 1)]
+		public int damageType = 1;
 	}
 
 	internal sealed class PointHurtComponent : BaseEntityTableComponent
@@ -20,5 +22,12 @@ namespace WMSDK
 		private point_hurt table;
 
 		public override BaseEntityTable GetEntitySpawnTable() => table;
+
+
+		private void OnDrawGizmos()
+		{
+			Gizmos.color = Color.red;
+			Gizmos.DrawWireSphere(transform.position, table.radius);
+		}
 	}
 }
