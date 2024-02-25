@@ -20,5 +20,16 @@ namespace WMSDK
 		private ambient_generic table;
 
 		public override BaseEntityTable GetEntitySpawnTable() => table;
+
+
+		private void OnDrawGizmos()
+		{
+			DrawDefaultGizmo(nameof(ambient_generic));
+		}
+
+		private void OnDrawGizmosSelected()
+		{
+			DrawDefaultGizmoSelectedWire();
+		}
 	}
 }

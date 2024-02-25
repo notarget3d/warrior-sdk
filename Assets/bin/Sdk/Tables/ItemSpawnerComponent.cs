@@ -17,5 +17,16 @@ namespace WMSDK
 		private point_item_spawner table;
 
 		public override BaseEntityTable GetEntitySpawnTable() => table;
+
+
+		private void OnDrawGizmos()
+		{
+			DrawDefaultGizmo();
+		}
+
+		private void OnDrawGizmosSelected()
+		{
+			DrawDefaultGizmoSelected();
+		}
 	}
 }

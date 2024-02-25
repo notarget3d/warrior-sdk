@@ -26,8 +26,15 @@ namespace WMSDK
 
 		private void OnDrawGizmos()
 		{
+			DrawDefaultGizmo(nameof(point_hurt));
+		}
+
+		private void OnDrawGizmosSelected()
+		{
 			Gizmos.color = Color.red;
 			Gizmos.DrawWireSphere(transform.position, table.radius);
+
+			DrawDefaultGizmoSelectedWire();
 		}
 	}
 }

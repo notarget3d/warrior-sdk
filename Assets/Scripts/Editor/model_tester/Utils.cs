@@ -1,6 +1,5 @@
 using System.Runtime.CompilerServices;
-using System.Collections;
-using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 
@@ -35,6 +34,32 @@ public static partial class Utils
 		return Quaternion.SlerpUnclamped(from, to, Mathf.Min(1f, maxDegreesDelta / angle));
 	}
 
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static string DoubleToString(double val)
+	{
+		return val.ToString("0.00", CultureInfo.InvariantCulture);
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static string FloatToString(float val)
+	{
+		return val.ToString("0.00", CultureInfo.InvariantCulture);
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static float StringToFloat(string str)
+	{
+		float.TryParse(str, NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out var val);
+		return val;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	public static float StringToFloat(System.ReadOnlySpan<char> str)
+	{
+		float.TryParse(str, NumberStyles.Float, CultureInfo.InvariantCulture.NumberFormat, out var val);
+		return val;
+	}
+
 	private static readonly Vector4[] s_UnitSphere = MakeUnitSphere(48);
 	public static void DrawSphere(Vector4 pos, float radius, Color color, float duration)
 	{
@@ -67,13 +92,46 @@ public static partial class Utils
 		Debug.DrawLine(sZ, eZ, color, duration);
 	}
 
+	[System.Diagnostics.Conditional("UNITY_EDITOR")]
 	public static void DrawPlayerGizmo(Vector3 pos, Color color)
 	{
+#if UNITY_EDITOR
 		const float radius = 0.4f;
-		const float height = 1.8f;
-		Gizmos.color = color;
-		Gizmos.DrawWireSphere(pos + new Vector3(0.0f, radius, 0.0f), radius);
-		Gizmos.DrawWireSphere(pos + new Vector3(0.0f, height - radius, 0.0f), radius);
+		const float height = 1.88f;
+		DrawWireCapsule(pos + new Vector3(0.0f, height / 2.0f, 0.0f), Quaternion.identity, radius, height, color);
+#endif
+	}
+
+	[System.Diagnostics.Conditional("UNITY_EDITOR")]
+	public static void DrawWireCapsule(Vector3 _pos, Quaternion _rot, float _radius, float _height, Color _color = default(Color))
+	{
+#if UNITY_EDITOR
+		if (_color != default(Color))
+		{
+			UnityEditor.Handles.color = _color;
+		}
+
+		Matrix4x4 angleMatrix = Matrix4x4.TRS(_pos, _rot, UnityEditor.Handles.matrix.lossyScale);
+
+		using (new UnityEditor.Handles.DrawingScope(angleMatrix))
+		{
+			var pointOffset = (_height - (_radius * 2)) / 2;
+
+			//draw sideways
+			UnityEditor.Handles.DrawWireArc(Vector3.up * pointOffset, Vector3.left, Vector3.back, -180, _radius);
+			UnityEditor.Handles.DrawLine(new Vector3(0, pointOffset, -_radius), new Vector3(0, -pointOffset, -_radius));
+			UnityEditor.Handles.DrawLine(new Vector3(0, pointOffset, _radius), new Vector3(0, -pointOffset, _radius));
+			UnityEditor.Handles.DrawWireArc(Vector3.down * pointOffset, Vector3.left, Vector3.back, 180, _radius);
+			//draw frontways
+			UnityEditor.Handles.DrawWireArc(Vector3.up * pointOffset, Vector3.back, Vector3.left, 180, _radius);
+			UnityEditor.Handles.DrawLine(new Vector3(-_radius, pointOffset, 0), new Vector3(-_radius, -pointOffset, 0));
+			UnityEditor.Handles.DrawLine(new Vector3(_radius, pointOffset, 0), new Vector3(_radius, -pointOffset, 0));
+			UnityEditor.Handles.DrawWireArc(Vector3.down * pointOffset, Vector3.back, Vector3.left, -180, _radius);
+			//draw center
+			UnityEditor.Handles.DrawWireDisc(Vector3.up * pointOffset, Vector3.up, _radius);
+			UnityEditor.Handles.DrawWireDisc(Vector3.down * pointOffset, Vector3.up, _radius);
+		}
+#endif
 	}
 
 	private static Vector4[] MakeUnitSphere(int len)

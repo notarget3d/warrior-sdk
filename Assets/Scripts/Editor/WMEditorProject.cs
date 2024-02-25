@@ -4,14 +4,11 @@ using UnityEngine;
 using UnityEditor;
 
 
-namespace WMSDK
+[CreateAssetMenu(fileName = "WMEditorProject", menuName = "WMEditorProject")]
+public sealed class WMEditorProject : ScriptableObject
 {
-	[CreateAssetMenu(fileName = "WMEditorProject", menuName = "WMEditorProject")]
-	public sealed class WMEditorProject : ScriptableObject
-	{
-		public string PackName;
-		public SceneAsset[] scenes;
-	}
+	public string PackName;
+	public SceneAsset[] scenes;
 }
 
 #endif

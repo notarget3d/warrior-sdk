@@ -17,5 +17,11 @@ namespace WMSDK
 		private light_environment table;
 
 		public override BaseEntityTable GetEntitySpawnTable() => table;
+
+
+		private void OnDrawGizmosSelected()
+		{
+			DrawDefaultGizmoSelectedWire();
+		}
 	}
 }

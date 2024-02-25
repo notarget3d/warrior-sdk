@@ -76,6 +76,7 @@ crashlytics-build.properties
 
 # Project related
 desktop.ini
+Assets/Scripts/Editor/WMDataSettings.asset
 
 
 # CEF (Chromium Embedded Framework) related
