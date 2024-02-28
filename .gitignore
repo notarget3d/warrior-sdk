@@ -77,7 +77,9 @@ crashlytics-build.properties
 # Project related
 desktop.ini
 Assets/Scripts/Editor/WMDataSettings.asset
-
+ProjectSettings/Packages/com.unity.probuilder/Settings.json
+Assets/ProBuilder Data.meta
+Assets/ProBuilder Data/
 
 # CEF (Chromium Embedded Framework) related
 GPUCache/
