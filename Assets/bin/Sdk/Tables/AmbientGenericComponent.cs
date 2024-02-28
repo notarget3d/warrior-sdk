@@ -7,9 +7,9 @@ namespace WMSDK
 	[Serializable]
 	public sealed class ambient_generic : BaseEntityTable
 	{
-		public float distMin;
-		public float distMax;
-		public float volume;
+		[Min(0.0f)] public float distMin;
+		[Min(0.0f)] public float distMax;
+		[Range(0.0f, 1.0f)] public float volume;
 		public string sound;
 		public string channel;
 	}
@@ -30,6 +30,15 @@ namespace WMSDK
 		private void OnDrawGizmosSelected()
 		{
 			DrawDefaultGizmoSelectedWire();
+
+			Gizmos.color = Color.yellow;
+			Gizmos.DrawWireSphere(transform.position, table.distMin);
+			Gizmos.DrawWireSphere(transform.position, table.distMax);
+		}
+
+		private void OnValidate()
+		{
+			table.distMax = Mathf.Clamp(table.distMax, table.distMin, float.MaxValue);
 		}
 	}
 }
