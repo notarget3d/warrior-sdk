@@ -8,9 +8,12 @@ namespace WMSDK
 	public sealed class point_item_spawner : BaseEntityTable
 	{
 		public float respawnTime;
+
+		[DropdownStringDrawer(EntitySpawnerListType.WEAPONS | EntitySpawnerListType.ITEMS)]
 		public string spawnEntity;
 	}
 
+	[AddComponentMenu("Entities/point_item_spawner")]
 	internal sealed class ItemSpawnerComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

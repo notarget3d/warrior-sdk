@@ -21,6 +21,7 @@ public partial class EditorGenericSpawnFlagsDrawer : PropertyDrawer
 		FuncBreakableComponent => typeof(func_breakable),
 		ItemSpawnerComponent => typeof(point_item_spawner),
 		AmbientGenericComponent => typeof(ambient_generic),
+		NpcMakerComponent => typeof(npc_maker),
 		_ => typeof(generic_entity)
 	};
 

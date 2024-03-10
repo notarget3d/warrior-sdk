@@ -10,6 +10,7 @@ namespace WMSDK
 		public float wait = 1.0f;
 	}
 
+	[AddComponentMenu("Entities/trigger_multiple")]
 	internal sealed class TriggerMultipleComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

@@ -10,6 +10,7 @@ namespace WMSDK
 		public bool killOnFire;
 	}
 
+	[AddComponentMenu("Entities/trigger_once")]
 	internal sealed class TriggerOnceComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

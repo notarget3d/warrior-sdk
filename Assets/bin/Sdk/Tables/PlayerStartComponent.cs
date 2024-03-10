@@ -9,6 +9,7 @@ namespace WMSDK
 	{
 	}
 
+	[AddComponentMenu("Entities/info_player_start")]
 	internal sealed class PlayerStartComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

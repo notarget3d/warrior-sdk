@@ -12,6 +12,7 @@ namespace WMSDK
 		public bool useCustomModel;
 	}
 
+	[AddComponentMenu("Entities/item_ammo_crate")]
 	internal sealed class ItemAmmoCrateComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

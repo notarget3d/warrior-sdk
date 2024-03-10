@@ -11,6 +11,7 @@ namespace WMSDK
 		public int score;
 	}
 
+	[AddComponentMenu("Entities/trigger_speedrun")]
 	internal sealed class TriggerSpeedrunComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

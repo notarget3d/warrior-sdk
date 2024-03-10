@@ -10,6 +10,7 @@ namespace WMSDK
 		public GameObject propFadeRoot;
 	}
 
+	[AddComponentMenu("Entities/trigger_fade")]
 	internal sealed class TriggerFadeComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

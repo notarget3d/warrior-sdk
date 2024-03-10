@@ -10,6 +10,7 @@ namespace WMSDK
 		public Vector3 force;
 	}
 
+	[AddComponentMenu("Entities/trigger_push")]
 	internal sealed class TriggerPushComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

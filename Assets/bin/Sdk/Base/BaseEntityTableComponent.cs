@@ -21,11 +21,13 @@ namespace WMSDK
 
         public GameObject CreateObject() => GameObject.Instantiate(model);
 
-        [Tooltip("Syntax:  'InputName TargetName,OutputName,Param,Delay'")]
+		[Tooltip("Syntax:  'InputName TargetName,OutputName,Param,Delay'")]
+		[EntityIODrawer]
         public string[] outputs = new string[0];
     }
 
-    public abstract class BaseEntityTableComponent : MonoBehaviour
+	[DisallowMultipleComponent]
+	public abstract class BaseEntityTableComponent : MonoBehaviour
     {
         public abstract BaseEntityTable GetEntitySpawnTable();
 

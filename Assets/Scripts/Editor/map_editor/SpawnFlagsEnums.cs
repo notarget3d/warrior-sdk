@@ -34,6 +34,13 @@ public partial class EditorGenericSpawnFlagsDrawer
 	}
 
 	[Flags]
+	public enum npc_maker
+	{
+		StartDisabled = START_DISABLED,
+		SpawnOnStart = BASE << 2
+	}
+
+	[Flags]
 	public enum ambient_generic
 	{
 		StartDisabled = START_DISABLED,

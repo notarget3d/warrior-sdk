@@ -5,19 +5,19 @@ using UnityEngine;
 namespace WMSDK
 {
 	[Serializable]
-	public sealed class npc_zombie : BaseEntityTable
+	public sealed class npc_thug : BaseNpcSoldierTable
 	{
-		public npc_zombie()
+		public npc_thug()
 		{
-			health = 1400;
+			health = 910;
 		}
 	}
 
-	[AddComponentMenu("Entities/npc_zombie")]
-	internal sealed class NpcZombieComponent : BaseEntityTableComponent
+	[AddComponentMenu("Entities/npc_thug")]
+	internal sealed class NpcThugComponent : BaseEntityTableComponent
 	{
 		[SerializeField]
-		private npc_zombie table;
+		private npc_thug table;
 
 		public override BaseEntityTable GetEntitySpawnTable() => table;
 

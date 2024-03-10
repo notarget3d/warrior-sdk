@@ -12,6 +12,7 @@ namespace WMSDK
 		public Transform[] ladderDismount;
 	}
 
+	[AddComponentMenu("Entities/func_ladder")]
 	internal sealed class FuncLadderComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

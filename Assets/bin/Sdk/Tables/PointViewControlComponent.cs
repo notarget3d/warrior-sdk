@@ -12,6 +12,7 @@ namespace WMSDK
 		public bool interpolate;
 	}
 
+	[AddComponentMenu("Entities/point_viewcontrol")]
 	internal sealed class PointViewControlComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

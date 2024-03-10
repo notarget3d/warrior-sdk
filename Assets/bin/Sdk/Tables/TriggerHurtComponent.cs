@@ -12,6 +12,7 @@ namespace WMSDK
 		public int damageType = 1;
 	}
 
+	[AddComponentMenu("Entities/trigger_hurt")]
 	internal sealed class TriggerHurtComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

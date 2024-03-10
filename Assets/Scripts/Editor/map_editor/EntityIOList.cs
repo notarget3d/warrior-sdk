@@ -1,0 +1,52 @@
+public static class EntityIOList
+{
+	public static readonly string[] OUTPUTS = new string[]
+	{
+		"Null",
+		"OnFireUser1",
+		"OnFireUser2",
+		"OnFireUser3",
+		"OnFireUser4",
+		"OnDamaged",
+		"OnPressed",
+		"OnUseLocked",
+		"OnIn",
+		"OnOut",
+		"OnTrigger",
+		"OnStartTouch",
+		"OnStartTouchAll",
+		"OnEndTouch",
+		"OnEndTouchAll",
+		"OnTouching",
+		"OnNotTouching"
+	};
+
+	public static readonly string[] INPUTS = new string[]
+	{
+		"None",
+		"Disable",
+		"Enable",
+		"Lock",
+		"Unlock",
+		"Kill",
+		"Toggle",
+		"AddOutput",
+		"SetColor",
+		"TurnOn",
+		"TurnOff",
+		"TogglePlay",
+		"Play",
+		"Stop",
+		"SetSound",
+		"SetVolume",
+		"TouchTest",
+		"SetDestIdx",
+		"SetPushForce",
+		"Press",
+		"PressIn",
+		"PressOut",
+		"Break",
+		"ForceSpawn",
+		"NpcSpawn"
+	};
+}

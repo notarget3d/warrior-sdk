@@ -8,19 +8,19 @@ using UnityEngine;
 public class DropdownDrawerAttribute : PropertyAttribute
 {
 	public int offset;
-	public string[] choices;
+	public string[] options;
 
 
 	public DropdownDrawerAttribute(int _offset, params string[] _choices)
 	{
 		offset = _offset;
-		choices = _choices;
+		options = _choices;
 	}
 
 	public DropdownDrawerAttribute(params string[] _choices)
 	{
 		offset = 0;
-		choices = _choices;
+		options = _choices;
 	}
 }
 
@@ -33,7 +33,8 @@ public class DropdownDrawer : PropertyDrawer
 		DropdownDrawerAttribute dropAttribute = attribute as DropdownDrawerAttribute;
 
 		EditorGUI.BeginChangeCheck();
-		int choiceIndex = EditorGUI.Popup(position, property.intValue - dropAttribute.offset, dropAttribute.choices);
+		int choiceIndex = EditorGUI.Popup(position, property.displayName,
+			property.intValue - dropAttribute.offset, dropAttribute.options);
 		if (EditorGUI.EndChangeCheck())
 		{
 			property.intValue = choiceIndex + dropAttribute.offset;

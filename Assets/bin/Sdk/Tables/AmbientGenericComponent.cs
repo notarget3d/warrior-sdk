@@ -7,13 +7,16 @@ namespace WMSDK
 	[Serializable]
 	public sealed class ambient_generic : BaseEntityTable
 	{
-		[Min(0.0f)] public float distMin;
-		[Min(0.0f)] public float distMax;
-		[Range(0.0f, 1.0f)] public float volume;
+		[Min(0.0f)] public float distMin = 8.0f;
+		[Min(0.0f)] public float distMax = 24.0f;
+		[Range(0.0f, 1.0f)] public float volume = 1.0f;
 		public string sound;
+
+		[DropdownStringDrawer("Master", "Music", "Ambient", "Voice")]
 		public string channel;
 	}
 
+	[AddComponentMenu("Entities/ambient_generic")]
 	internal sealed class AmbientGenericComponent : BaseEntityTableComponent
 	{
 		[SerializeField]
@@ -38,6 +41,11 @@ namespace WMSDK
 
 		private void OnValidate()
 		{
+			if (table == null)
+			{
+				return;
+			}
+
 			table.distMax = Mathf.Clamp(table.distMax, table.distMin, float.MaxValue);
 		}
 	}
