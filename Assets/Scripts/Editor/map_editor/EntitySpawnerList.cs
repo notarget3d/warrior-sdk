@@ -16,6 +16,10 @@ public static class EntitySpawnerList
 		"weapon_pumpshotgun",
 		"weapon_rifle_m4",
 		"weapon_rifle_ak74m",
+		"weapon_rpg7",
+		"weapon_m32",
+		"weapon_xf1",
+		"weapon_xb52"
 	};
 
 	public static string[] ITEMS => new string[]

@@ -7,7 +7,7 @@ namespace WMSDK
 	[Serializable]
 	public sealed class point_item_spawner : BaseEntityTable
 	{
-		public float respawnTime;
+		[Min(0.1f)] public float respawnTime;
 
 		[DropdownStringDrawer(EntitySpawnerListType.WEAPONS | EntitySpawnerListType.ITEMS)]
 		public string spawnEntity;

@@ -11,6 +11,13 @@ namespace WMSDK
 		public bool toggle;
 		public string sound;
 		public string soundLocked;
+
+		[Tooltip("Object to animate")]
+		public Transform animated;
+		[Tooltip("Material to use when button is in pressed state")]
+		public Material animPressedMaterial;
+		[Tooltip("Material to use when button is in locked state")]
+		public Material animLockedMaterial;
 	}
 
 	[AddComponentMenu("Entities/func_button")]

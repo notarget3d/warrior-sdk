@@ -7,7 +7,7 @@ namespace WMSDK
 	[Serializable]
 	public sealed class npc_maker : BaseEntityTable
 	{
-		[Min(0.0f)] public float respawnTime;
+		[Min(0.1f)] public float respawnTime;
 		[Min(0.0f)] public float spawnMinDist;
 		[Min(0.0f)] public float spawnMaxDist;
 
