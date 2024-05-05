@@ -49,6 +49,96 @@ namespace WMSDK
 			UnityEditor.EditorUtility.SetDirty(gameObject);
 			UnityEditor.EditorUtility.SetDirty(this);
 		}
+
+		public Transform[] GetChilds() => gameObject.GetComponentsInChildren<Transform>();
+
+		public bool IsSelectedOrAny(Transform[] transforms)
+		{
+			for (int i = 0; i < UnityEditor.Selection.gameObjects.Length; i++)
+			{
+				GameObject obj = UnityEditor.Selection.gameObjects[i];
+
+				if (obj == gameObject)
+				{
+					return true;
+				}
+
+				for (int f = 0; f < transforms.Length; f++)
+				{
+					if (transforms[f].gameObject == obj)
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		public static Bounds GetColliderBoundingBox(Collider collider)
+		{
+			if (collider is BoxCollider box)
+			{
+				return new Bounds(box.center, box.size);
+			}
+			else if (collider is SphereCollider sphere)
+			{
+				float r2 = sphere.radius * 2.0f;
+				return new Bounds(sphere.center, new Vector3(r2, r2, r2));
+			}
+			else if (collider is CapsuleCollider capsule)
+			{
+				float r2 = capsule.radius * 2.0f;
+				float h = capsule.height;
+				int dir = capsule.direction;
+
+				Vector3 size = Vector3.zero;
+				ReadOnlySpan<Vector3> dirs = stackalloc Vector3[3];
+
+				for (int i = 0; i < 3; i++)
+				{
+					if (i == dir)
+						size += dirs[i] * h;
+					else
+						size += dirs[i] * r2;
+				}
+
+				return new Bounds(capsule.center, size);
+			}
+			else if (collider is MeshCollider mesh)
+			{
+				return mesh.sharedMesh.bounds;
+			}
+
+			return new Bounds(Vector3.zero, Vector3.one * 0.01f);
+		}
+
+		public static Bounds GetObjectCollidersBounds(GameObject obj)
+		{
+			Bounds bounds = new Bounds(Vector3.zero, Vector3.zero);
+
+			Collider[] parentColliders = obj.GetComponents<Collider>();
+
+			for (int i = 0; i < parentColliders.Length; i++)
+			{
+				bounds.Encapsulate(GetColliderBoundingBox(parentColliders[i]));
+			}
+
+			for (int i = 0; i < obj.transform.childCount; i++)
+			{
+				Transform tc = obj.transform.GetChild(i);
+				Collider[] childs = tc.GetComponents<Collider>();
+
+				for (int f = 0; f < childs.Length; f++)
+				{
+					Bounds b = GetColliderBoundingBox(childs[f]);
+					b.center += tc.localPosition;
+					bounds.Encapsulate(b);
+				}
+			}
+
+			return bounds;
+		}
 #endif
 
 		private static readonly Vector3 GIZMO_SIZE = new Vector3(0.4f, 0.4f, 0.4f);

@@ -16,14 +16,34 @@ public class SpawnFlagsDrawerAttribute : PropertyAttribute
 [CustomPropertyDrawer(typeof(SpawnFlagsDrawerAttribute))]
 public partial class EditorGenericSpawnFlagsDrawer : PropertyDrawer
 {
-	private static Type GetFlagsList(UnityEngine.Object obj) => obj switch
+	private static Type GetFlagsList(UnityEngine.Object obj)
 	{
-		FuncBreakableComponent => typeof(func_breakable),
-		ItemSpawnerComponent => typeof(point_item_spawner),
-		AmbientGenericComponent => typeof(ambient_generic),
-		NpcMakerComponent => typeof(npc_maker),
-		_ => typeof(generic_entity)
-	};
+		var fieldFlags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+		var info = obj.GetType().GetField("table", fieldFlags);
+
+		if (info != null)
+		{
+			var thisType = typeof(EditorGenericSpawnFlagsDrawer);
+
+			var decl = thisType.GetMembers(System.Reflection.BindingFlags.Public |
+				System.Reflection.BindingFlags.DeclaredOnly);
+
+			for (int i = 0; i < decl.Length; i++)
+			{
+				var declEnum = decl[i];
+
+				if (declEnum is Type e && e.IsEnum)
+				{
+					if (e.Name == info.FieldType.Name)
+					{
+						return e;
+					}
+				}
+			}
+		}
+
+		return typeof(generic_entity);
+	}
 
 	public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 	{

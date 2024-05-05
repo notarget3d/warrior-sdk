@@ -27,6 +27,11 @@ public static class EntitySpawnerList
 		"null",
 		"item_bonus_health",
 		"item_bonus_mega",
+		"item_grenade_frag5",
+		"item_grenade_smoke",
+		"item_med_kit",
+		"item_flashlight",
+		"item_flare",
 	};
 
 	public static string[] NPCS => new string[]

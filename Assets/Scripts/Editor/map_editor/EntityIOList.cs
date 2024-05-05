@@ -47,6 +47,14 @@ public static class EntityIOList
 		"PressOut",
 		"Break",
 		"ForceSpawn",
-		"NpcSpawn"
+		"NpcSpawn",
+		"GoToFloor",
+		"ToggleElevator",
+		"StopElevator",
+		"StopConveyor",
+		"StartConveyor",
+		"Close",
+		"Open",
+		"ToggleDoor",
 	};
 }

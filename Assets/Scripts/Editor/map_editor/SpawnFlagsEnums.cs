@@ -41,6 +41,16 @@ public partial class EditorGenericSpawnFlagsDrawer
 	}
 
 	[Flags]
+	public enum func_door
+	{
+		StartDisabled = START_DISABLED,
+		StartLocked = START_LOCKED,
+		Toggle = BASE << 1,
+		UseOpens = BASE << 2,
+		BlockOpens = BASE << 3
+	}
+
+	[Flags]
 	public enum ambient_generic
 	{
 		StartDisabled = START_DISABLED,
@@ -48,6 +58,28 @@ public partial class EditorGenericSpawnFlagsDrawer
 		Looped = BASE << 2,
 		PlayEverywhere = BASE << 3,
 		unused = BASE << 4
+	}
+
+	[Flags]
+	public enum trigger_push
+	{
+		StartDisabled = START_DISABLED,
+		PushPhysics = BASE << 1,
+	}
+
+	[Flags]
+	public enum func_conveyor
+	{
+		StartDisabled = START_DISABLED,
+		StartActive = BASE << 1,
+		WorldSpace = BASE << 2
+	}
+
+	[Flags]
+	public enum npc_thug
+	{
+		StartDisabled = START_DISABLED,
+		StartPatroling = BASE << 1
 	}
 }
 
