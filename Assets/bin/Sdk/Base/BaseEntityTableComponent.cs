@@ -32,6 +32,9 @@ namespace WMSDK
         public abstract BaseEntityTable GetEntitySpawnTable();
 
 #if UNITY_EDITOR
+
+		public static Mesh meshGizmoArrow = null;
+
 		public virtual void PreBuild()
 		{
 			var t = GetEntitySpawnTable();
@@ -141,9 +144,46 @@ namespace WMSDK
 		}
 #endif
 
-		private static readonly Vector3 GIZMO_SIZE = new Vector3(0.4f, 0.4f, 0.4f);
-		private static readonly Color GIZMO_COLOR_SELECTED = new Color(0.8f, 0.01f, 0.01f, 1.0f);
-		private static readonly Color GIZMO_COLOR_DEFAULT = new Color(0.65f, 0.65f, 0.65f, 1.0f);
+		protected static readonly Vector3 GIZMO_SIZE = new Vector3(0.4f, 0.4f, 0.4f);
+		protected static readonly Color GIZMO_COLOR_SELECTED = new Color(0.8f, 0.01f, 0.01f, 1.0f);
+		protected static readonly Color GIZMO_COLOR_DEFAULT = new Color(0.65f, 0.65f, 0.65f, 1.0f);
+
+		[System.Diagnostics.Conditional("UNITY_EDITOR")]
+		protected void DrawText(string text, Color color, Vector3 position)
+		{
+#if UNITY_EDITOR
+			const float maxDist = 28.0f;
+			const float minDist = 2.0f;
+			const float alphaFadeDist = maxDist - minDist;
+
+			UnityEditor.SceneView sceneCam = UnityEditor.SceneView.lastActiveSceneView;
+			float dist = Vector3.Distance(position, sceneCam.camera.transform.position);
+
+			if (dist > maxDist)
+			{
+				return;
+			}
+
+			float alpha = dist > alphaFadeDist ? Utils.Remap(dist, alphaFadeDist, maxDist, 1.0f, 0.0f) : 1.0f;
+
+			int fontSize = (int)Utils.Remap(dist, minDist, maxDist, 20, 8);
+
+			color.a = color.a * alpha;
+			GUIStyle style = new GUIStyle();
+			style.fontSize = fontSize;
+			style.normal.textColor = color;
+			style.alignment = TextAnchor.LowerCenter;
+
+			GUIStyle styleShadow = new GUIStyle();
+			styleShadow.fontSize = fontSize;
+			styleShadow.normal.textColor = new Color(0f, 0f, 0f, alpha * 0.8f);
+			styleShadow.alignment = TextAnchor.LowerCenter;
+			styleShadow.contentOffset = new Vector2(1f, 1f);
+
+			UnityEditor.Handles.Label(position, text, styleShadow);
+			UnityEditor.Handles.Label(position, text, style);
+#endif
+		}
 
 		protected void DrawDefaultGizmo()
 		{
@@ -168,6 +208,21 @@ namespace WMSDK
 		{
 			Gizmos.color = Color.yellow;
 			Gizmos.DrawWireCube(transform.position, GIZMO_SIZE);
+		}
+
+		public static void DrawArrow(Vector3 pos, Quaternion rot, Color color, float scale)
+		{
+#if UNITY_EDITOR
+			if (meshGizmoArrow == null)
+			{
+				string path = "Assets/models/dev/arrow.fbx";
+
+				meshGizmoArrow = UnityEditor.AssetDatabase.LoadAssetAtPath<Mesh>(path);
+			}
+
+			Gizmos.color = color;
+			Gizmos.DrawMesh(meshGizmoArrow, 0, pos, rot, new Vector3(scale, scale, scale));
+#endif
 		}
 	}
 }

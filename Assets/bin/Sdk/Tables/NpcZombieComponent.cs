@@ -9,7 +9,7 @@ namespace WMSDK
 	{
 		public npc_zombie()
 		{
-			health = 1400;
+			health = 600;
 		}
 	}
 

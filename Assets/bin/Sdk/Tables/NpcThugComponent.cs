@@ -7,13 +7,9 @@ namespace WMSDK
 	[Serializable]
 	public sealed class npc_thug : BaseNpcSoldierTable
 	{
-		public npc_thug()
-		{
-			health = 910;
-		}
 	}
 
-	[AddComponentMenu("Entities/npc_thug")]
+	[AddComponentMenu("Entities/" + nameof(npc_thug))]
 	internal sealed class NpcThugComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

@@ -19,7 +19,7 @@ namespace WMSDK
 		public string spawnWeapon;
 	}
 
-	[AddComponentMenu("Entities/npc_maker")]
+	[AddComponentMenu("Entities/" + nameof(npc_maker))]
 	internal sealed class NpcMakerComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

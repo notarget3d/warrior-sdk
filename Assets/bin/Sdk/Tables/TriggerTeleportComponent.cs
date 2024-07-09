@@ -16,7 +16,7 @@ namespace WMSDK
 		public string soundTarget;
 	}
 
-	[AddComponentMenu("Entities/trigger_teleport")]
+	[AddComponentMenu("Entities/" + nameof(trigger_teleport))]
 	internal sealed class TriggerTeleportComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

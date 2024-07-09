@@ -32,7 +32,7 @@ namespace WMSDK
 		public string soundMoving;
 	}
 
-	[AddComponentMenu("Entities/func_door")]
+	[AddComponentMenu("Entities/" + nameof(func_door))]
 	internal sealed class FuncDoorComponent : BaseEntityTableComponent
 	{
 		[SerializeField]
@@ -55,8 +55,7 @@ namespace WMSDK
 			Gizmos.color = Color.yellow;
 			Gizmos.DrawWireCube(m_Bounds.center, m_Bounds.size);
 
-			Gizmos.color = Color.cyan;
-			Gizmos.DrawRay(Vector3.zero, table.moveDir);
+			DrawArrow(m_Bounds.center, Quaternion.LookRotation(table.moveDir), Color.cyan, 1.0f);
 		}
 
 		private void OnValidate()

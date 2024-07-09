@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 using WMSDK;
 
@@ -18,6 +19,7 @@ public sealed class EditorSdkWindow : EditorWindow
 	private Editor m_SettingsEdit;
 	private string m_EntListString;
 
+	private bool m_ScenesFold;
 	private Vector2 m_ScrollPos;
 	private Rect m_RtList;
 
@@ -63,6 +65,19 @@ public sealed class EditorSdkWindow : EditorWindow
 			BuildContent(true);
 		}
 
+		m_ScenesFold = EditorGUILayout.Foldout(m_ScenesFold, "Scene Quick Access");
+
+		if (m_ScenesFold && m_Settings != null)
+		{
+			for (int i = 0; i < m_Settings.scenes.Length; i++)
+			{
+				if (GUILayout.Button(m_Settings.scenes[i].name, GUILayout.MaxWidth(240f)))
+				{
+					LoadScene(m_Settings.scenes[i]);
+				}
+			}
+		}
+
 		if (m_SettingsEdit != null)
 		{
 			m_SettingsEdit.OnInspectorGUI();
@@ -71,6 +86,11 @@ public sealed class EditorSdkWindow : EditorWindow
 		m_ScrollPos = GUILayout.BeginScrollView(m_ScrollPos);
 		GUILayout.Label(m_EntListString, GUILayout.MaxWidth(360f));
 		GUILayout.EndScrollView();
+	}
+
+	private void LoadScene(SceneAsset scene)
+	{
+		EditorSceneManager.OpenScene($"Assets/Scenes/{scene.name}.unity", OpenSceneMode.Single);
 	}
 
 	private void BuildContent(bool run = false)
@@ -84,16 +104,17 @@ public sealed class EditorSdkWindow : EditorWindow
 			return;
 		}
 
-		List<string> names = new List<string>();
 		List<string> paths = new List<string>();
 
 		foreach (var s in m_Settings.scenes)
 		{
 			paths.Add(AssetDatabase.GetAssetPath(s));
-			names.Add(s.name);
 		}
 
-		EditorCreateAssets.BuildSceneAssets(paths.ToArray(), m_Settings.PackName);
+		if (EditorCreateAssets.BuildSceneAssets(paths.ToArray(), m_Settings.PackName) == false)
+		{
+			return;
+		}
 
 		if (run)
 		{

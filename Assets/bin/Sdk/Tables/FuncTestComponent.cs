@@ -12,7 +12,7 @@ namespace WMSDK
 		public float offset = 1.0f;
 	}
 
-	[AddComponentMenu("Entities/func_test")]
+	[AddComponentMenu("Entities/" + nameof(func_test))]
 	internal sealed class FuncTestComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

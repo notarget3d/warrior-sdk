@@ -7,9 +7,9 @@ namespace WMSDK
 	[Serializable]
 	public sealed class func_button : BaseEntityTable
 	{
-		[Min(0.01f)] public float delay;
+		[Min(0.01f)] public float delay = 0.5f;
 		public bool toggle;
-		public string sound;
+		public string sound = "Button.PushClick1";
 		public string soundLocked;
 
 		[Tooltip("Object to animate")]
@@ -20,7 +20,7 @@ namespace WMSDK
 		public Material animLockedMaterial;
 	}
 
-	[AddComponentMenu("Entities/func_button")]
+	[AddComponentMenu("Entities/" + nameof(func_button))]
 	internal sealed class FuncButtonComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

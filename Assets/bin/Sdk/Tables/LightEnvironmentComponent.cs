@@ -11,7 +11,7 @@ namespace WMSDK
 	}
 
 	[RequireComponent(typeof(Light))]
-	[AddComponentMenu("Entities/light_environment")]
+	[AddComponentMenu("Entities/" + nameof(light_environment))]
 	internal sealed class LightEnvironmentComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

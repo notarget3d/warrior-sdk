@@ -80,6 +80,7 @@ Assets/Scripts/Editor/WMDataSettings.asset
 ProjectSettings/Packages/com.unity.probuilder/Settings.json
 Assets/ProBuilder Data.meta
 Assets/ProBuilder Data/
+Assets/Scenes/
 
 # CEF (Chromium Embedded Framework) related
 GPUCache/

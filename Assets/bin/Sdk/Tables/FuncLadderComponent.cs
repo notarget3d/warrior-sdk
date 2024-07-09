@@ -12,7 +12,7 @@ namespace WMSDK
 		public Transform[] ladderDismount;
 	}
 
-	[AddComponentMenu("Entities/func_ladder")]
+	[AddComponentMenu("Entities/" + nameof(func_ladder))]
 	internal sealed class FuncLadderComponent : BaseEntityTableComponent
 	{
 		[SerializeField]
@@ -30,8 +30,7 @@ namespace WMSDK
 			{
 				Gizmos.color = Color.cyan;
 				Gizmos.DrawLine(s1.position, s2.position);
-				Gizmos.color = Color.blue;
-				Gizmos.DrawLine(s1.position, s1.position + GetLadderNormal());
+				DrawArrow(s1.position, Quaternion.LookRotation(GetLadderNormal()), Color.blue, 1.0f);
 
 				DrawPlayerGizmo(s1.position, Color.yellow);
 				DrawPlayerGizmo(s2.position, Color.yellow);

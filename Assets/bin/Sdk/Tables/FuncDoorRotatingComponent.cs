@@ -22,7 +22,7 @@ namespace WMSDK
 		public string soundMoving;
 	}
 
-	[AddComponentMenu("Entities/func_door_rotating")]
+	[AddComponentMenu("Entities/" + nameof(func_door_rotating))]
 	internal sealed class FuncDoorRotatingComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

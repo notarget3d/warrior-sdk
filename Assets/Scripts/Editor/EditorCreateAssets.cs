@@ -12,7 +12,7 @@ public static class EditorCreateAssets
 	public const string BUILD_DIR = "AssetBuild";
 
 
-	public static void BuildSceneAssets(string[] assets, string packName)
+	public static bool BuildSceneAssets(string[] assets, string packName)
 	{
 		List<AssetBundleBuild> list = new List<AssetBundleBuild>();
 
@@ -27,10 +27,12 @@ public static class EditorCreateAssets
 			Directory.CreateDirectory(BUILD_DIR);
 		}
 
-		BuildPipeline.BuildAssetBundles(BUILD_DIR, list.ToArray(),
+		var manifest = BuildPipeline.BuildAssetBundles(BUILD_DIR, list.ToArray(),
 			BuildAssetBundleOptions.UncompressedAssetBundle |
 			BuildAssetBundleOptions.AssetBundleStripUnityVersion,
 			BuildTarget.StandaloneWindows64);
+
+		return manifest != null;
 	}
 
 	public static void BuildSoundAsset()

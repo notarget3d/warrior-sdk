@@ -14,7 +14,7 @@ namespace WMSDK
 		public GameObject customGibs;
 	}
 
-	[AddComponentMenu("Entities/func_breakable")]
+	[AddComponentMenu("Entities/" + nameof(func_breakable))]
 	internal sealed class FuncBreakableComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

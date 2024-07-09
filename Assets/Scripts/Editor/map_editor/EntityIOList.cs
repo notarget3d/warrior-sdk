@@ -56,5 +56,10 @@ public static class EntityIOList
 		"Close",
 		"Open",
 		"ToggleDoor",
+		"ShowMessage",
+		"ChangeLevel",
+		"Use",
+		"TriggerGameEnd",
+		"RollCredits",
 	};
 }

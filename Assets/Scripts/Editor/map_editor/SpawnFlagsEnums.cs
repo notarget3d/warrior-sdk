@@ -5,16 +5,25 @@ using System;
 public partial class EditorGenericSpawnFlagsDrawer
 {
 	private const int START_DISABLED = 1 << 0;
-	private const int START_LOCKED = 1 << 1;
-	private const int IGNORE_AIM_ASSIST = 1 << 2;
+	private const int DAMAGE_ACTIVATES = 1 << 1;
+	private const int STARTS_LOCKED = 1 << 2;
+	private const int IGNORE_AIM_ASSIST = 1 << 3;
 	private const int BASE = 1 << 15;
 
 	[Flags]
 	public enum generic_entity
 	{
 		StartDisabled = START_DISABLED,
-		StartLocked = START_LOCKED,
+		StartLocked = STARTS_LOCKED,
 		IgnoreAimAssist = IGNORE_AIM_ASSIST,
+	}
+
+	[Flags]
+	public enum func_button
+	{
+		StartDisabled = START_DISABLED,
+		DamageActivates = DAMAGE_ACTIVATES,
+		StartsLocked = STARTS_LOCKED
 	}
 
 	[Flags]
@@ -44,10 +53,11 @@ public partial class EditorGenericSpawnFlagsDrawer
 	public enum func_door
 	{
 		StartDisabled = START_DISABLED,
-		StartLocked = START_LOCKED,
+		StartLocked = STARTS_LOCKED,
 		Toggle = BASE << 1,
 		UseOpens = BASE << 2,
-		BlockOpens = BASE << 3
+		BlockOpens = BASE << 3,
+		DamageOpens = BASE << 4
 	}
 
 	[Flags]
@@ -80,6 +90,13 @@ public partial class EditorGenericSpawnFlagsDrawer
 	{
 		StartDisabled = START_DISABLED,
 		StartPatroling = BASE << 1
+	}
+
+	[Flags]
+	public enum game_message
+	{
+		MessageEveryone = BASE << 1,
+		ReliableMessage = BASE << 2
 	}
 }
 

@@ -10,7 +10,7 @@ namespace WMSDK
 	{
 	}
 
-	[AddComponentMenu("Entities/info_player_start")]
+	[AddComponentMenu("Entities/" + nameof(info_player_start))]
 	internal sealed class PlayerStartComponent : BaseEntityTableComponent
 	{
 		[SerializeField]
@@ -23,8 +23,7 @@ namespace WMSDK
 		{
 			Utils.DrawPlayerGizmo(transform.position, Color.green);
 			Quaternion rot = Quaternion.Euler(0.0f, transform.eulerAngles.y, 0.0f);
-			Gizmos.color = Color.cyan;
-			Gizmos.DrawRay(transform.position + Vector3.up, rot * Vector3.forward);
+			DrawArrow(transform.position + Vector3.up, rot, Color.cyan, 0.7f);
 		}
 	}
 }

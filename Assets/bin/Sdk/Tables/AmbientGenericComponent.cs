@@ -16,7 +16,7 @@ namespace WMSDK
 		public string channel;
 	}
 
-	[AddComponentMenu("Entities/ambient_generic")]
+	[AddComponentMenu("Entities/" + nameof(ambient_generic))]
 	internal sealed class AmbientGenericComponent : BaseEntityTableComponent
 	{
 		[SerializeField]

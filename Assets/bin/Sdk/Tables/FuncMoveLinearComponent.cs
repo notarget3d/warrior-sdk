@@ -7,7 +7,7 @@ namespace WMSDK
 	[Serializable]
 	public sealed class func_movelinear : BaseEntityTable
 	{
-		[Min(0.0001f)] public float speed;
+		[Min(0.0001f)] public float speed = 2.0f;
 		[Min(0)] public short blockDamage;
 
 		public Transform[] floors;

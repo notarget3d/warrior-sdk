@@ -7,13 +7,15 @@ namespace WMSDK
 	[Serializable]
 	public sealed class func_conveyor : BaseEntityTable
 	{
-		public float speed;
+		[Min(0.1f)]
+		public float speed = 1.0f;
 		public Vector3 dir = Vector3.forward;
 
 		public int animMaterialId = -1;
 		public float animUvScale = 1.0f;
 	}
 
+	[AddComponentMenu("Entities/" + nameof(func_conveyor))]
 	internal sealed class FuncConveyorComponent : BaseEntityTableComponent
 	{
 		[SerializeField]
@@ -26,10 +28,9 @@ namespace WMSDK
 
 		private void OnDrawGizmos()
 		{
-			void DrawArrow(Vector3 offset)
+			void DrawArrowGizmo(Vector3 offset)
 			{
-				Gizmos.color = Color.yellow;
-				Gizmos.DrawLine(offset, offset + table.dir);
+				DrawArrow(offset, Quaternion.LookRotation(table.dir), Color.yellow, 0.75f);
 			}
 
 			if (IsSelectedOrAny(GetChilds()) == false)
@@ -41,12 +42,12 @@ namespace WMSDK
 
 			if (Utils.IsSet(table.spawnFlags, (int)EditorGenericSpawnFlagsDrawer.func_conveyor.WorldSpace))
 			{
-				DrawArrow(transform.position + arrowPos);
+				DrawArrowGizmo(transform.position + arrowPos);
 			}
 			else
 			{
 				Gizmos.matrix = transform.localToWorldMatrix;
-				DrawArrow(arrowPos);
+				DrawArrowGizmo(arrowPos);
 			}
 		}
 
