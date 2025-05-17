@@ -8,7 +8,7 @@ namespace WMSDK
 	public sealed class item_ammo_crate : BaseEntityTable
 	{
 		[DropdownDrawer("None", "Pistol", "Magnum", "SMG", "Rifle", "Sniper",
-			"Shotgun", "Energy Cell", "Missile", "40mm", "Crossbow")]
+			"Shotgun", "Energy Cell", "Missile", "40mm", "Crossbow", "Chaingun")]
 		public int ammoType = 1;
 		public bool useCustomModel;
 	}
@@ -33,8 +33,6 @@ namespace WMSDK
 			Gizmos.DrawCube(new Vector3(0.0f, 0.35f, 0.0f), new Vector3(0.6f, 0.7f, 1.2f));
 
 			DrawArrow(new Vector3(0.0f, 0.2f, 0.0f), Quaternion.LookRotation(Vector3.right), Color.red, 0.35f);
-			//Gizmos.color = Color.red;
-			//Gizmos.DrawLine(Vector3.zero, new Vector3(0.35f, 0.0f, 0.0f));
 		}
 
 		private void OnDrawGizmosSelected()
