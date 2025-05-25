@@ -14,9 +14,9 @@ namespace WMSDK
 
 		public bool blockClientCamera;
 
-		public string soundStart;
-		public string soundStop;
-		public string soundMoving;
+		[SoundBrowserDrawer] public string soundStart;
+		[SoundBrowserDrawer] public string soundStop;
+        [SoundBrowserDrawer] public string soundMoving;
 	}
 
 	[AddComponentMenu("Entities/func_movelinear")]

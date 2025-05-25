@@ -12,8 +12,8 @@ namespace WMSDK
 		public bool isVelocityReset;
 		public bool isVelocitySetDir;
 		public bool isTargetResetAfterUsed;
-		public string sound;
-		public string soundTarget;
+		[SoundBrowserDrawer] public string sound;
+        [SoundBrowserDrawer] public string soundTarget;
 	}
 
 	[AddComponentMenu("Entities/" + nameof(trigger_teleport))]

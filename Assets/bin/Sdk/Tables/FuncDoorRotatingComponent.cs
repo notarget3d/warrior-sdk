@@ -15,11 +15,11 @@ namespace WMSDK
 
 		public string linkedDoor;
 
-		public string soundOpen;
-		public string soundOpened;
-		public string soundClose;
-		public string soundClosed;
-		public string soundMoving;
+		[SoundBrowserDrawer] public string soundOpen;
+		[SoundBrowserDrawer] public string soundOpened;
+		[SoundBrowserDrawer] public string soundClose;
+		[SoundBrowserDrawer] public string soundClosed;
+        [SoundBrowserDrawer] public string soundMoving;
 	}
 
 	[AddComponentMenu("Entities/" + nameof(func_door_rotating))]

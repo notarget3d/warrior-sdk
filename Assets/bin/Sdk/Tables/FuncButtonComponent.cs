@@ -7,10 +7,12 @@ namespace WMSDK
 	[Serializable]
 	public sealed class func_button : BaseEntityTable
 	{
-		[Min(0.01f)] public float delay = 0.5f;
+        [Tooltip("Amount of time, in seconds, after the button has been pressed before it returns to the starting position.\n" +
+            "Once it has returned, it can be used again. If the value is set to 'Infinity', the button never returns.")]
+        [Min(0.01f)] public float delay = 0.5f;
 		public bool toggle;
-		public string sound = "Button.PushClick1";
-		public string soundLocked;
+        [SoundBrowserDrawer] public string sound = "Button.PushClick1";
+		[SoundBrowserDrawer] public string soundLocked;
 
 		[Tooltip("Object to animate")]
 		public Transform animated;
