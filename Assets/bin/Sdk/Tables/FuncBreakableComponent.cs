@@ -10,7 +10,7 @@ namespace WMSDK
 		public int gibs;
 		public int damageFilter;
 		public float respawn = -1.0f;
-        [SoundBrowserDrawer] public string soundBreak;
+		[SoundBrowserDrawer] public string soundBreak;
 		public GameObject customGibs;
 	}
 

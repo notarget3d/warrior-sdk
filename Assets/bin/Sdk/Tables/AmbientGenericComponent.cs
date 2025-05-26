@@ -10,7 +10,7 @@ namespace WMSDK
 		[Min(0.0f)] public float distMin = 8.0f;
 		[Min(0.0f)] public float distMax = 24.0f;
 		[Range(0.0f, 1.0f)] public float volume = 1.0f;
-        [SoundBrowserDrawer] public string sound;
+		[SoundBrowserDrawer] public string sound;
 
 		[DropdownStringDrawer("Master", "Music", "Ambient", "Voice")]
 		public string channel;

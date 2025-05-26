@@ -19,7 +19,7 @@ namespace WMSDK
 		[SoundBrowserDrawer] public string soundOpened;
 		[SoundBrowserDrawer] public string soundClose;
 		[SoundBrowserDrawer] public string soundClosed;
-        [SoundBrowserDrawer] public string soundMoving;
+		[SoundBrowserDrawer] public string soundMoving;
 	}
 
 	[AddComponentMenu("Entities/" + nameof(func_door_rotating))]

@@ -61,6 +61,6 @@ public static class EntityIOList
 		"Use",
 		"TriggerGameEnd",
 		"RollCredits",
-        "SurvivalStart",
+		"SurvivalStart",
 	};
 }

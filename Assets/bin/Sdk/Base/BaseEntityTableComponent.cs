@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace WMSDK
 {
-    [Serializable]
-    public abstract class BaseEntityTable
-    {
+	[Serializable]
+	public abstract class BaseEntityTable
+	{
 		[HideInInspector] public Vector3 position;
 		[HideInInspector] public Vector3 angles;
-        [ReadOnly] public string classname;
+		[ReadOnly] public string classname;
 		[HideInInspector] public string targetname;
 		[Min(0)] public short maxHealth;
 		[Min(0)] public short health;
@@ -19,17 +19,17 @@ namespace WMSDK
 
 		[HideInInspector] public GameObject model;
 
-        public GameObject CreateObject() => GameObject.Instantiate(model);
+		public GameObject CreateObject() => GameObject.Instantiate(model);
 
 		[Tooltip("Syntax:  'InputName TargetName,OutputName,Param,Delay'")]
 		[EntityIODrawer]
-        public string[] outputs = new string[0];
-    }
+		public string[] outputs = new string[0];
+	}
 
 	[DisallowMultipleComponent]
 	public abstract class BaseEntityTableComponent : MonoBehaviour
-    {
-        public abstract BaseEntityTable GetEntitySpawnTable();
+	{
+		public abstract BaseEntityTable GetEntitySpawnTable();
 
 #if UNITY_EDITOR
 

@@ -20,7 +20,7 @@ public static class EntitySpawnerList
 		"weapon_m32",
 		"weapon_xf1",
 		"weapon_xb52",
-        "weapon_chaingun"
+		"weapon_chaingun"
 	};
 
 	public static string[] ITEMS => new string[]
