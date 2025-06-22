@@ -8,22 +8,53 @@ using UnityEditor;
 
 public sealed class EditorSoundBrowser : EditorWindow
 {
-	private readonly struct SoundEntry
+	private abstract class SoundEntryBase
 	{
-		public readonly string name;
-		public readonly WMSound sound;
+		public abstract string name { get; }
+		public abstract void Preview(AudioSource source);
+	}
+
+	private sealed class SoundEntryScript : SoundEntryBase
+	{
+		private readonly string m_name;
+		private readonly WMSound m_sound;
+
+		public override string name => m_name;
 
 
-		public SoundEntry(string n, in WMSound snd)
+		public SoundEntryScript(string n, in WMSound snd)
 		{
-			name = n;
-			sound = snd;
+			m_name = n;
+			m_sound = snd;
+		}
+
+		public override void Preview(AudioSource source)
+		{
+			m_sound.Play(source);
+		}
+	}
+
+	private sealed class SoundEntryRaw : SoundEntryBase
+	{
+		private readonly string m_name;
+		public override string name => m_name;
+
+
+		public SoundEntryRaw(string n)
+		{
+			m_name = n;
+		}
+
+		public override void Preview(AudioSource source)
+		{
+			m_AudioSource.clip = WMSoundSystem.instance.GetAudioClip(m_name);
+			m_AudioSource.volume = 1.0f;
+			m_AudioSource.pitch = 1.0f;
+			m_AudioSource.Play();
 		}
 	}
 
 	private static AudioSource m_AudioSource;
-
-	private static AssetBundle m_SoundBundle;
 	private WMEditorSettings m_Settings;
 	private Vector2 m_ScrollPos;
 
@@ -31,8 +62,10 @@ public sealed class EditorSoundBrowser : EditorWindow
 	private int m_PageNum = 0;
 	private int m_PageMax = 0;
 	private bool m_CopyBuffer;
-	private SoundEntry[] m_Entries = new SoundEntry[0];
-	private SerializedProperty m_Property;
+	private bool m_RawView;
+	private SoundEntryScript[] m_Entries = new SoundEntryScript[0];
+	private SoundEntryRaw[] m_EntriesRaw = new SoundEntryRaw[0];
+	private SerializedProperty m_Property = null;
 
 
 	private void OnEnable()
@@ -40,7 +73,13 @@ public sealed class EditorSoundBrowser : EditorWindow
 		if (m_Settings == null)
 		{
 			m_Settings = AssetDatabase.LoadAssetAtPath<WMEditorSettings>(EditorSdkWindow.CONFIG_PATH);
-			Refresh();
+
+			if (WMSoundSystem.instance.isLoaded == false)
+			{
+				Refresh();
+			}
+
+			InitSoundEntries();
 		}
 	}
 
@@ -56,18 +95,15 @@ public sealed class EditorSoundBrowser : EditorWindow
 
 	private void UnloadAll()
 	{
-		AssetBundle.UnloadAllAssetBundles(true);
+		WMSoundSystem.instance.UnloadAudioBundles();
 	}
 
 	private void Refresh()
 	{
 		UnloadAll();
 
-		if (m_SoundBundle == null)
-		{
-			string path = Path.Combine(m_Settings.GamePath, "sound", "sounds.wsd");
-			m_SoundBundle = AssetBundle.LoadFromFile(path);
-		}
+		string path = Path.Combine(m_Settings.GamePath, "sound");
+		WMSoundSystem.instance.LoadAudioBundles(path);
 
 		if (m_AudioSource == null)
 		{
@@ -79,23 +115,32 @@ public sealed class EditorSoundBrowser : EditorWindow
 
 		string scriptsPath = Path.Combine(m_Settings.GamePath, "scripts");
 
-		WMSoundSystem.instance.SetBundle(m_SoundBundle);
 		WMSoundSystem.instance.LoadSoundScript(Path.Combine(scriptsPath, "default_sounds.txt"));
 		WMSoundSystem.instance.LoadSoundScript(Path.Combine(scriptsPath, "game_player_sounds.txt"));
 		WMSoundSystem.instance.LoadSoundScript(Path.Combine(scriptsPath, "item_sounds.txt"));
 		WMSoundSystem.instance.LoadSoundScript(Path.Combine(scriptsPath, "misc_phys.txt"));
 		WMSoundSystem.instance.LoadSoundScript(Path.Combine(scriptsPath, "npc_zombie.txt"));
 		WMSoundSystem.instance.LoadSoundScript(Path.Combine(scriptsPath, "weapon_sounds.txt"));
+	}
 
+	private void InitSoundEntries()
+	{
+		var raw = WMSoundSystem.instance.GetSoundsRaw();
 		var dict = WMSoundSystem.instance.GetSounds();
-		m_Entries = new SoundEntry[dict.Count];
+		m_Entries = new SoundEntryScript[dict.Count];
+		m_EntriesRaw = new SoundEntryRaw[raw.Length];
 		int i = 0;
 		m_PageNum = 0;
 
 		foreach (var kv in dict)
 		{
-			m_Entries[i] = new SoundEntry(kv.Key, kv.Value);
+			m_Entries[i] = new SoundEntryScript(kv.Key, kv.Value);
 			i++;
+		}
+
+		for (int f = 0; f < raw.Length; f++)
+		{
+			m_EntriesRaw[f] = new SoundEntryRaw(raw[f]);
 		}
 	}
 
@@ -109,19 +154,24 @@ public sealed class EditorSoundBrowser : EditorWindow
 		if (GUILayout.Button("Refresh", GUILayout.MaxWidth(MAX_WIDTH)))
 		{
 			Refresh();
+			InitSoundEntries();
 		}
 
-		if (m_Entries.Length > 0)
+		SoundEntryBase[] entriesBase;
+
+		entriesBase = m_RawView == false ? m_Entries : m_EntriesRaw;
+
+		if (entriesBase.Length > 0)
 		{
 			GUILayout.BeginHorizontal(GUILayout.MaxWidth(MAX_WIDTH));
 			GUILayout.Label("Max entries:", GUILayout.MaxWidth(MAX_WIDTH / 4f));
 			GUILayout.Space(4.0f);
-			m_MinEnties = (int)GUILayout.HorizontalSlider(m_MinEnties, 1, m_Entries.Length, GUILayout.MaxWidth(MAX_WIDTH));
+			m_MinEnties = (int)GUILayout.HorizontalSlider(m_MinEnties, 1, entriesBase.Length, GUILayout.MaxWidth(MAX_WIDTH));
 			GUILayout.EndHorizontal();
 
-			if (m_Entries.Length > m_MinEnties)
+			if (entriesBase.Length > m_MinEnties)
 			{
-				m_PageMax = m_Entries.Length / m_MinEnties;
+				m_PageMax = entriesBase.Length / m_MinEnties;
 			}
 			else
 			{
@@ -134,6 +184,7 @@ public sealed class EditorSoundBrowser : EditorWindow
 			}
 
 			m_CopyBuffer = GUILayout.Toggle(m_CopyBuffer, " Copy to system buffer", GUILayout.MaxWidth(MAX_WIDTH));
+			m_RawView = GUILayout.Toggle(m_RawView, " Raw view", GUILayout.MaxWidth(MAX_WIDTH));
 
 			GUILayout.Space(16.0f);
 
@@ -151,15 +202,15 @@ public sealed class EditorSoundBrowser : EditorWindow
 			m_PageMax = 0;
 		}
 
-		SoundEntry[] entries;
+		SoundEntryBase[] entries;
 
-		if (m_MinEnties >= m_Entries.Length)
+		if (m_MinEnties >= entriesBase.Length)
 		{
-			entries = m_Entries;
+			entries = entriesBase;
 		}
 		else
 		{
-			entries = m_Entries.Skip(m_MinEnties * m_PageNum).Take(m_MinEnties).ToArray();
+			entries = entriesBase.Skip(m_MinEnties * m_PageNum).Take(m_MinEnties).ToArray();
 
 			GUILayout.BeginHorizontal(GUILayout.MaxWidth(MAX_WIDTH));
 
@@ -189,7 +240,7 @@ public sealed class EditorSoundBrowser : EditorWindow
 
 			if (GUILayout.Button(soundName, GUILayout.MaxWidth(MAX_WIDTH)))
 			{
-				entries[i].sound.Play(m_AudioSource);
+				entries[i].Preview(m_AudioSource);
 
 				if (m_CopyBuffer == true)
 				{
@@ -215,10 +266,17 @@ public sealed class EditorSoundBrowser : EditorWindow
 		GUILayout.EndScrollView();
 	}
 
+	[UnityEditor.Callbacks.DidReloadScripts]
+	private static void OnScriptsReloaded()
+	{
+		AssetBundle.UnloadAllAssetBundles(true);
+		WMSoundSystem.instance.UnloadAudioBundles();
+	}
+
 	[MenuItem("Sdk/Sound browser")]
 	public static void ShowWindow()
 	{
-		EditorSoundBrowser window = EditorWindow.GetWindow(typeof(EditorSoundBrowser)) as EditorSoundBrowser;
+		EditorSoundBrowser window = GetWindow<EditorSoundBrowser>(typeof(EditorSoundBrowser));
 		window.SetEditorProperty(null);
 	}
 }

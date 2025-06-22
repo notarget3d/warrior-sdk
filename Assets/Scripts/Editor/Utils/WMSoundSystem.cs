@@ -8,8 +8,10 @@ using UnityEngine;
 
 public sealed class WMSoundSystem
 {
+	private const string SOUND_PACK_EXT = ".wsd";
 	public static WMSoundSystem instance { get; private set; }
 
+	public bool isLoaded { get; private set; }
 	private readonly List<AssetBundle> m_LoadedBoundles = new List<AssetBundle>();
 	private readonly Dictionary<string, AudioClip> m_Clips = new Dictionary<string, AudioClip>();
 	private readonly Dictionary<string, WMSound> m_Sounds = new Dictionary<string, WMSound>();
@@ -20,12 +22,52 @@ public sealed class WMSoundSystem
 		return m_Sounds;
 	}
 
-	public void SetBundle(AssetBundle bundle)
+	public string[] GetSoundsRaw()
 	{
+		List<string> ret = new List<string>(200);
+
+		for (int i = 0; i < m_LoadedBoundles.Count; i++)
+		{
+			ret.AddRange(m_LoadedBoundles[i].GetAllAssetNames());
+		}
+
+		return ret.ToArray();
+	}
+
+	public void LoadAudioBundles(string path)
+	{
+		string[] files = Directory.GetFiles(path);
+
+		for (int i = 0; i < files.Length; i++)
+		{
+			string file = files[i];
+			if (Path.GetExtension(file) == SOUND_PACK_EXT)
+			{
+				AssetBundle bundle = AssetBundle.LoadFromFile(file);
+
+				if (bundle != null)
+				{
+					m_LoadedBoundles.Add(bundle);
+				}
+			}
+		}
+
+		isLoaded = m_LoadedBoundles.Count > 0;
+
+		GC.Collect();
+	}
+
+	public void UnloadAudioBundles()
+	{
+		for (int i = 0; i < m_LoadedBoundles.Count; i++)
+		{
+			m_LoadedBoundles[i].Unload(true);
+		}
+
+		m_LoadedBoundles.Clear();
 		m_Clips.Clear();
 		m_Sounds.Clear();
-		m_LoadedBoundles.Clear();
-		m_LoadedBoundles.Add(bundle);
+		isLoaded = false;
 	}
 
 	public void LoadSoundScript(string scriptName)
@@ -233,7 +275,7 @@ public sealed class WMSoundSystem
 
 	private WMSoundSystem()
 	{
-		m_Sounds.Add("", WMSound.Null);
+		//m_Sounds.Add("", WMSound.Null);
 	}
 }
 

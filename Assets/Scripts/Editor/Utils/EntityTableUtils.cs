@@ -12,7 +12,8 @@ namespace WMSDK
 		[MenuItem("Sdk/update all entity tables")]
 		public static void UpdateAllEntityTables()
 		{
-			var tables = GameObject.FindObjectsOfType<BaseEntityTableComponent>();
+			var tables = GameObject.FindObjectsByType<BaseEntityTableComponent>(FindObjectsInactive.Include,
+				FindObjectsSortMode.InstanceID);
 
 			ushort editorId = 1;
 
