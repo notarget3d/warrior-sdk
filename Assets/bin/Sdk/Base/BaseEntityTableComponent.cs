@@ -11,8 +11,8 @@ namespace WMSDK
 		[HideInInspector] public Vector3 angles;
 		[ReadOnly] public string classname;
 		[HideInInspector] public string targetname;
-		[Min(0)] public short maxHealth;
-		[Min(0)] public short health;
+		public short maxHealth;
+		public short health;
 		[HideInInspector] public ushort hammerId;
 		[HideInInspector] public ushort parentId;
 		[SpawnFlagsDrawer] public int spawnFlags;

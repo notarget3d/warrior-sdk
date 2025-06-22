@@ -21,7 +21,7 @@ public sealed class EditorSdkWindow : EditorWindow
 
 	private bool m_ScenesFold;
 	private Vector2 m_ScrollPos;
-	private Rect m_RtList;
+	private Vector2 m_MainScrollPos;
 
 	private readonly char dsc = Path.DirectorySeparatorChar;
 
@@ -30,25 +30,21 @@ public sealed class EditorSdkWindow : EditorWindow
 	{
 		InitEntityList();
 
-		m_RtList = new Rect(0f, 30f, Screen.width / 2f, Screen.height);
-
 		m_Settings = AssetDatabase.LoadAssetAtPath<WMEditorSettings>(CONFIG_PATH);
 
 		if (m_Settings == null)
 		{
 			m_Settings = ScriptableObject.CreateInstance<WMEditorSettings>();
 			AssetDatabase.CreateAsset(m_Settings, CONFIG_PATH);
+		}
 
-			m_SettingsEdit = Editor.CreateEditor(m_Settings);
-		}
-		else
-		{
-			m_SettingsEdit = Editor.CreateEditor(m_Settings);
-		}
+		m_SettingsEdit = Editor.CreateEditor(m_Settings);
 	}
 
 	private void OnGUI()
 	{
+		m_MainScrollPos = GUILayout.BeginScrollView(m_MainScrollPos);
+
 		if (GUILayout.Button("Generate ent IDs", GUILayout.MaxWidth(120f)))
 		{
 			EntityTableUtils.UpdateAllEntityTables();
@@ -71,6 +67,11 @@ public sealed class EditorSdkWindow : EditorWindow
 		{
 			for (int i = 0; i < m_Settings.scenes.Length; i++)
 			{
+				if (m_Settings.scenes[i] == null)
+				{
+					continue;
+				}
+
 				if (GUILayout.Button(m_Settings.scenes[i].name, GUILayout.MaxWidth(240f)))
 				{
 					LoadScene(m_Settings.scenes[i]);
@@ -83,8 +84,9 @@ public sealed class EditorSdkWindow : EditorWindow
 			m_SettingsEdit.OnInspectorGUI();
 		}
 
-		m_ScrollPos = GUILayout.BeginScrollView(m_ScrollPos);
+		m_ScrollPos = GUILayout.BeginScrollView(m_ScrollPos, GUILayout.MinHeight(75.0f));
 		GUILayout.Label(m_EntListString, GUILayout.MaxWidth(360f));
+		GUILayout.EndScrollView();
 		GUILayout.EndScrollView();
 	}
 
@@ -108,6 +110,11 @@ public sealed class EditorSdkWindow : EditorWindow
 
 		foreach (var s in m_Settings.scenes)
 		{
+			if (s == null)
+			{
+				continue;
+			}
+
 			paths.Add(AssetDatabase.GetAssetPath(s));
 		}
 
@@ -156,8 +163,7 @@ public sealed class EditorSdkWindow : EditorWindow
 		string module = m_Settings.GamePath + dsc + GAME_EXECUTABLE;
 		string cmdline = m_Settings.GameRunParams + " +map " + EditorSceneManager.GetActiveScene().name;
 
-		Debug.Log("Starting game " + module);
-		Debug.Log("Start command line " + cmdline);
+		Debug.Log($"Starting game {module} {cmdline}");
 
 		System.Diagnostics.ProcessStartInfo inf = new System.Diagnostics.ProcessStartInfo(module, cmdline);
 		inf.WorkingDirectory = m_Settings.GamePath;
@@ -170,7 +176,8 @@ public sealed class EditorSdkWindow : EditorWindow
 	private void InitEntityList()
 	{
 		m_EntListString = "";
-		BaseEntityTableComponent[] entities = GameObject.FindObjectsOfType<BaseEntityTableComponent>();
+		BaseEntityTableComponent[] entities =
+			FindObjectsByType<BaseEntityTableComponent>(FindObjectsInactive.Include, FindObjectsSortMode.InstanceID);
 
 		for (int i = 0; i < entities.Length; i++)
 		{

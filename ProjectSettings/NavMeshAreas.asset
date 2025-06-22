@@ -71,20 +71,20 @@ NavMeshProjectSettings:
     cost: 1
   m_LastAgentTypeID: -887442657
   m_Settings:
-  - serializedVersion: 2
+  - serializedVersion: 3
     agentTypeID: 0
     agentRadius: 0.35
     agentHeight: 1.88
     agentSlope: 44
     agentClimb: 0.4
-    ledgeDropHeight: 0
-    maxJumpAcrossDistance: 0
+    ledgeDropHeight: 2
+    maxJumpAcrossDistance: 2
     minRegionArea: 2
     manualCellSize: 0
     cellSize: 0.16666667
     manualTileSize: 0
     tileSize: 256
-    accuratePlacement: 0
+    buildHeightMesh: 0
     maxJobWorkers: 0
     preserveTilesOutsideBounds: 0
     debug:
