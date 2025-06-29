@@ -98,6 +98,13 @@ public partial class EditorGenericSpawnFlagsDrawer
 		MessageEveryone = BASE << 1,
 		ReliableMessage = BASE << 2
 	}
+
+	[Flags]
+	public enum env_soundscape
+	{
+		StartDisabled = START_DISABLED,
+		StartActive = BASE << 1
+	}
 }
 
 #endif

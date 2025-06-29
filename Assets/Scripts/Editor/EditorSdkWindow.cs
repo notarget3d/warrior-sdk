@@ -61,6 +61,11 @@ public sealed class EditorSdkWindow : EditorWindow
 			BuildContent(true);
 		}
 
+		if (GUILayout.Button("Build sound assets", GUILayout.MaxWidth(120f)))
+		{
+			BuildSoundAssets();
+		}
+
 		m_ScenesFold = EditorGUILayout.Foldout(m_ScenesFold, "Scene Quick Access");
 
 		if (m_ScenesFold && m_Settings != null)
@@ -95,6 +100,37 @@ public sealed class EditorSdkWindow : EditorWindow
 		EditorSceneManager.OpenScene($"Assets/Scenes/{scene.name}.unity", OpenSceneMode.Single);
 	}
 
+	private void BuildSoundAssets()
+	{
+		if (m_Settings == null || string.IsNullOrEmpty(m_Settings.SoundsPath) == true)
+		{
+			return;
+		}
+
+		string fullPath = Path.Combine(Application.dataPath, m_Settings.SoundsPath);
+
+		if (Directory.Exists(fullPath) == false)
+		{
+			Debug.Log($"Path: {m_Settings.SoundsPath} not found");
+			return;
+		}
+
+		string soundPackName = m_Settings.PackName + "_sound";
+
+		WMSoundSystem.instance.UnloadAudioBundles();
+		EditorCreateAssets.BuildSoundAssetCustom("Assets/" + m_Settings.SoundsPath, soundPackName, true);
+
+		soundPackName = soundPackName + EditorCreateAssets.FILE_EXT_SOUND;
+
+		// Copy bundles to game folder
+		DirectoryInfo di = Directory.GetParent(Application.dataPath);
+
+		string sourcePath = Path.Combine(di.FullName, EditorCreateAssets.BUILD_DIR, soundPackName);
+		string gameSoundPath = Path.Combine(m_Settings.GamePath, "sound", soundPackName);
+
+		File.Copy(sourcePath, gameSoundPath, true);
+	}
+
 	private void BuildContent(bool run = false)
 	{
 		Debug.Log("Building");
@@ -117,6 +153,8 @@ public sealed class EditorSdkWindow : EditorWindow
 
 			paths.Add(AssetDatabase.GetAssetPath(s));
 		}
+
+		WMSoundSystem.instance.UnloadAudioBundles();
 
 		if (EditorCreateAssets.BuildSceneAssets(paths.ToArray(), m_Settings.PackName) == false)
 		{

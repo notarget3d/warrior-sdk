@@ -16,7 +16,7 @@ namespace WMSDK
 		public int damageType = 1;
 	}
 
-	[AddComponentMenu("Entities/point_hurt")]
+	[AddComponentMenu("Entities/" + nameof(point_hurt))]
 	internal sealed class PointHurtComponent : BaseEntityTableComponent
 	{
 		[SerializeField]
