@@ -8,7 +8,7 @@ namespace WMSDK
 	public sealed class func_door : BaseEntityTable
 	{
 		[Min(0.001f)] public float speed = 4.0f;
-		[Min(0)] public short blockDamage;
+		public short blockDamage;
 
 		[Tooltip("Should door be opened from start")]
 		public bool startOpen;

@@ -8,7 +8,7 @@ namespace WMSDK
 	public sealed class func_door_rotating : BaseEntityTable
 	{
 		[Min(0.0f)] public float speed;
-		[Min(0)] public short blockDamage;
+		public short blockDamage;
 
 		public Vector3 rotAxis;
 		public float openAngle;

@@ -1,7 +1,9 @@
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
+using System;
 using UnityEngine;
+using WMSDK;
 
 
 [System.Diagnostics.Conditional("UNITY_EDITOR")]
@@ -20,6 +22,25 @@ public class EntityIODrawer : PropertyDrawer
 		float delayWidth = width / 2.0f;
 		float padding = 4.0f;
 
+		string[] outputs = EntityIOList.OUTPUTS;
+		string[] inputs = EntityIOList.INPUTS;
+
+		if (property.serializedObject.targetObject is BaseEntityTableComponent baseTable)
+		{
+			string[] validOutputs = baseTable.GetValidOutputList();
+			string[] validInputs = baseTable.GetValidInputList();
+
+			if (validOutputs != null)
+			{
+				outputs = validOutputs;
+			}
+
+			if (validInputs != null)
+			{
+				inputs = validInputs;
+			}
+		}
+
 		Rect outputNameRect = new Rect(position.x + padding, position.y, width - padding, position.height);
 		Rect targetRect = new Rect(position.x + width + padding, position.y, width - padding, position.height);
 		Rect inputNameRect = new Rect(position.x + width * 2.0f + padding, position.y, width - padding, position.height);
@@ -31,16 +52,16 @@ public class EntityIODrawer : PropertyDrawer
 
 		EditorGUI.BeginChangeCheck();
 
-		int iOutput = EditorGUI.Popup(outputNameRect, GetOutputIndex(outputName), EntityIOList.OUTPUTS);
+		int iOutput = EditorGUI.Popup(outputNameRect, GetIOIndex(outputs, outputName), outputs);
 		string target = EditorGUI.TextField(targetRect, GetOptionParam(options, 0));
-		int iInput = EditorGUI.Popup(inputNameRect, GetInputIndex(GetOptionParam(options, 1)), EntityIOList.INPUTS);
+		int iInput = EditorGUI.Popup(inputNameRect, GetIOIndex(inputs, GetOptionParam(options, 1)), inputs);
 		string paramString = EditorGUI.TextField(paramRect, GetOptionParam(options, 2));
 		float delay = EditorGUI.FloatField(delayRect, GetDelayValue(GetOptionParam(options, 3)));
 
 		if (EditorGUI.EndChangeCheck())
 		{
-			property.stringValue = EntityIOList.OUTPUTS[iOutput] +
-				$" {target},{EntityIOList.INPUTS[iInput]},{paramString},{Utils.FloatToString(delay)}";
+			property.stringValue = outputs[iOutput] +
+				$" {target},{inputs[iInput]},{paramString},{Utils.FloatToString(delay)}";
 		}
 	}
 
@@ -49,15 +70,9 @@ public class EntityIODrawer : PropertyDrawer
 		return Utils.StringToFloat(delayString);
 	}
 
-	private static int GetInputIndex(string inputName)
+	private static int GetIOIndex(string[] list, string ioName)
 	{
-		int idx = System.Array.FindIndex(EntityIOList.INPUTS, x => x == inputName);
-		return idx != -1 ? idx : 0;
-	}
-
-	private static int GetOutputIndex(string outputName)
-	{
-		int idx = System.Array.FindIndex(EntityIOList.OUTPUTS, x => x == outputName);
+		int idx = Array.FindIndex(list, x => x == ioName);
 		return idx != -1 ? idx : 0;
 	}
 

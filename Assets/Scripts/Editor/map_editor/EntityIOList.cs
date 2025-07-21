@@ -8,17 +8,37 @@ public static class EntityIOList
 		"OnFireUser3",
 		"OnFireUser4",
 		"OnDamaged",
+		"OnBreak",
+		// button
 		"OnPressed",
 		"OnUseLocked",
 		"OnIn",
 		"OnOut",
+		// relay, trigger
 		"OnTrigger",
 		"OnStartTouch",
 		"OnStartTouchAll",
 		"OnEndTouch",
 		"OnEndTouchAll",
 		"OnTouching",
-		"OnNotTouching"
+		"OnNotTouching",
+		// counter
+		"OutValue",
+		"OnHitMin",
+		"OnHitMax",
+		"OnGetValue",
+		"OnChangedFromMin",
+		"OnChangedFromMax",
+		// relay
+		"OnSpawn",
+		// branch
+		"OnTrue",
+		"OnFalse",
+		// auto
+		"OnMapSpawn",
+		"OnNewGame",
+		"OnLoadGame",
+		"OnMapTransition"
 	};
 
 	public static readonly string[] INPUTS = new string[]
@@ -62,5 +82,27 @@ public static class EntityIOList
 		"TriggerGameEnd",
 		"RollCredits",
 		"SurvivalStart",
+
+		// branch, counter
+		"SetValue",
+
+		// relay
+		"Trigger",
+		// branch
+		"SetValueTest",
+		"ToggleState",
+		"ToggleStateTest",
+		"Test",
+		// counter
+		"Add",
+		"Divide",
+		"Multiply",
+		"SetValueNoFire",
+		"Subtract",
+		"SetHitMax",
+		"SetHitMin",
+		"GetValue",
+		"SetMaxValueNoFire",
+		"SetMinValueNoFire",
 	};
 }

@@ -31,6 +31,16 @@ namespace WMSDK
 	{
 		public abstract BaseEntityTable GetEntitySpawnTable();
 
+		public virtual string[] GetValidInputList()
+		{
+			return null;
+		}
+
+		public virtual string[] GetValidOutputList()
+		{
+			return null;
+		}
+
 #if UNITY_EDITOR
 
 		public static Mesh meshGizmoArrow = null;

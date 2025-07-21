@@ -8,7 +8,7 @@ namespace WMSDK
 	public sealed class func_movelinear : BaseEntityTable
 	{
 		[Min(0.0001f)] public float speed = 2.0f;
-		[Min(0)] public short blockDamage;
+		public short blockDamage;
 
 		public Transform[] floors;
 
@@ -19,7 +19,7 @@ namespace WMSDK
 		[SoundBrowserDrawer] public string soundMoving;
 	}
 
-	[AddComponentMenu("Entities/func_movelinear")]
+	[AddComponentMenu("Entities/" + nameof(func_movelinear))]
 	internal sealed class FuncMoveLinearComponent : BaseEntityTableComponent
 	{
 		[SerializeField]
@@ -49,6 +49,11 @@ namespace WMSDK
 
 					for (int f = 0; f < floors.Length; f++)
 					{
+						if (floors[f] == null)
+						{
+							continue;
+						}
+
 						if (floors[f].gameObject == obj)
 						{
 							selected = true;
@@ -68,11 +73,21 @@ namespace WMSDK
 
 				for (int i = 0; i < floors.Length - 1; i++)
 				{
+					if (floors[i] == null)
+					{
+						continue;
+					}
+
 					Gizmos.DrawLine(floors[i].position, floors[i + 1].position);
 				}
 
 				for (int i = 0; i < floors.Length; i++)
 				{
+					if (floors[i] == null)
+					{
+						continue;
+					}
+
 					Gizmos.DrawWireSphere(floors[i].position, 0.08f);
 				}
 			}
