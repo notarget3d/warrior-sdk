@@ -8,7 +8,7 @@ namespace WMSDK
 	public sealed class item_ammo_crate : BaseEntityTable
 	{
 		[DropdownDrawer("None", "Pistol", "Magnum", "SMG", "Rifle", "Sniper",
-			"Shotgun", "Energy Cell", "Missile", "40mm", "Crossbow", "Chaingun")]
+			"Shotgun", "Energy Cell", "Missile", "40mm", "Crossbow", "Chaingun", "Fuel")]
 		public int ammoType = 1;
 		public bool useCustomModel;
 	}

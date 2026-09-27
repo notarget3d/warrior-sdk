@@ -12,8 +12,12 @@ public sealed class WMEditorSettings : ScriptableObject
 	public string GamePath;
 	public string GameRunParams = "-console -screen-fullscreen 0 -screen-width 1280 -screen-height 720 +sv_cheats 1";
 	public string SoundsPath;
+	public string SharedTexturesName;
 
-	public SceneAsset[] scenes => currentProject.scenes;
+	[HideInInspector]
+	public bool UseSharedTextures;
+
+	public SceneAsset[] scenes => currentProject != null ? currentProject.scenes : System.Array.Empty<SceneAsset>();
 }
 
 #endif

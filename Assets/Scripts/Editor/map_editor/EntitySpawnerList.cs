@@ -11,16 +11,21 @@ public static class EntitySpawnerList
 	{
 		"null",
 		"weapon_pistol",
+		"weapon_357",
 		"weapon_deagle",
 		"weapon_smg_1",
+		"weapon_scattergun",
 		"weapon_pumpshotgun",
+		"weapon_saiga12",
 		"weapon_rifle_m4",
 		"weapon_rifle_ak74m",
 		"weapon_rpg7",
 		"weapon_m32",
 		"weapon_xf1",
 		"weapon_xb52",
-		"weapon_chaingun"
+		"weapon_flamethrower",
+		"weapon_chaingun",
+		"weapon_plasma_generator"
 	};
 
 	public static string[] ITEMS => new string[]
@@ -30,6 +35,8 @@ public static class EntitySpawnerList
 		"item_bonus_mega",
 		"item_grenade_frag5",
 		"item_grenade_smoke",
+		"item_molotov",
+		"item_claymore",
 		"item_med_kit",
 		"item_flashlight",
 		"item_flare",

@@ -19,11 +19,10 @@ public sealed class EditorSdkWindow : EditorWindow
 	private Editor m_SettingsEdit;
 	private string m_EntListString;
 
+	private bool m_ManualTextureBuild => m_Settings.UseSharedTextures;
 	private bool m_ScenesFold;
 	private Vector2 m_ScrollPos;
 	private Vector2 m_MainScrollPos;
-
-	private readonly char dsc = Path.DirectorySeparatorChar;
 
 
 	private void OnEnable()
@@ -53,17 +52,28 @@ public sealed class EditorSdkWindow : EditorWindow
 
 		if (GUILayout.Button("Build map", GUILayout.MaxWidth(120f)))
 		{
-			BuildContent(false);
+			EditorApplication.delayCall += () => BuildContent(false, m_ManualTextureBuild);
 		}
 
 		if (GUILayout.Button("Build and Run", GUILayout.MaxWidth(120f)))
 		{
-			BuildContent(true);
+			EditorApplication.delayCall += () => BuildContent(true, m_ManualTextureBuild);
 		}
 
 		if (GUILayout.Button("Build sound assets", GUILayout.MaxWidth(120f)))
 		{
-			BuildSoundAssets();
+			EditorApplication.delayCall += () => BuildSoundAssets();
+		}
+
+		m_Settings.UseSharedTextures = GUILayout.Toggle(m_ManualTextureBuild,
+			"Shared texture manifest (set if you use multiple projects)");
+
+		if (m_ManualTextureBuild)
+		{
+			if (GUILayout.Button("Build textures", GUILayout.MaxWidth(120f)))
+			{
+				EditorApplication.delayCall += () => BuildTextureAssets();
+			}
 		}
 
 		m_ScenesFold = EditorGUILayout.Foldout(m_ScenesFold, "Scene Quick Access");
@@ -100,6 +110,18 @@ public sealed class EditorSdkWindow : EditorWindow
 		EditorSceneManager.OpenScene($"Assets/Scenes/{scene.name}.unity", OpenSceneMode.Single);
 	}
 
+	private void BuildTextureAssets()
+	{
+		if (string.IsNullOrEmpty(m_Settings.SharedTexturesName))
+		{
+			Debug.Log("Provide shared textures package name");
+			return;
+		}
+
+		AssetBuildScript.BuildSceneTexturesAssets(m_Settings.SharedTexturesName,
+			AssetBuildScript.SCENE_TEXTURES_MANIFEST_SHARED_PATH, false);
+	}
+
 	private void BuildSoundAssets()
 	{
 		if (m_Settings == null || string.IsNullOrEmpty(m_Settings.SoundsPath) == true)
@@ -128,18 +150,22 @@ public sealed class EditorSdkWindow : EditorWindow
 		string sourcePath = Path.Combine(di.FullName, EditorCreateAssets.BUILD_DIR, soundPackName);
 		string gameSoundPath = Path.Combine(m_Settings.GamePath, "sound", soundPackName);
 
+		if (!File.Exists(gameSoundPath) || !File.Exists(sourcePath))
+		{
+			return;
+		}
+
 		File.Copy(sourcePath, gameSoundPath, true);
 	}
 
-	private void BuildContent(bool run = false)
+	private bool BuildContent(bool run, bool manualTextures)
 	{
 		Debug.Log("Building");
-		EntityTableUtils.UpdateAllEntityTables();
 
 		if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() == false)
 		{
 			Debug.Log("Abort");
-			return;
+			return false;
 		}
 
 		List<string> paths = new List<string>();
@@ -156,49 +182,45 @@ public sealed class EditorSdkWindow : EditorWindow
 
 		WMSoundSystem.instance.UnloadAudioBundles();
 
-		if (EditorCreateAssets.BuildSceneAssets(paths.ToArray(), m_Settings.PackName) == false)
+		if (!manualTextures)
 		{
-			return;
+			if (File.Exists(AssetBuildScript.SCENE_TEXTURES_MANIFEST_PATH))
+			{
+				File.Delete(AssetBuildScript.SCENE_TEXTURES_MANIFEST_PATH);
+			}
+		}
+
+		if (AssetBuildScript.BuildSceneAssets(paths.ToArray(), m_Settings.PackName) == false)
+		{
+			return false;
+		}
+
+		if (!manualTextures)
+		{
+			AssetBuildScript.BuildSceneTexturesAssets(m_Settings.PackName,
+				AssetBuildScript.SCENE_TEXTURES_MANIFEST_PATH, true);
 		}
 
 		if (run)
 		{
-			RunMap();
+			RunMap(manualTextures);
 		}
+
+		return true;
 	}
 
-	private void RunMap()
+	private void RunMap(bool manualTextures)
 	{
-		string targetPath;
-		string sourcePath;
+		string mapFileName = $"{m_Settings.PackName}{AssetBuildScript.FILE_EXT_MAP}";
+		CopyRuntimeAsset(mapFileName, "maps/" + mapFileName);
 
-		string gameExec = $"{m_Settings.GamePath}{dsc}{GAME_EXECUTABLE}";
-		string mapsDir = $"{m_Settings.GamePath}{dsc}maps";
-
-		// Check for executable
-		if (!File.Exists(gameExec))
+		if (manualTextures == false)
 		{
-			Debug.LogWarning($"Unable to find game executable at '{gameExec}'");
-			return;
+			string texturesFileName = $"{m_Settings.PackName}{AssetBuildScript.FILE_PACK_EXT}";
+			CopyRuntimeAsset(texturesFileName, "textures/" + texturesFileName);
 		}
 
-		// Create folders to copy
-		if (!Directory.Exists(mapsDir))
-		{
-			Directory.CreateDirectory(mapsDir);
-		}
-
-		targetPath = $"{mapsDir}{dsc}{m_Settings.PackName}{EditorCreateAssets.FILE_EXT_MAP}";
-
-		// Copy bundles to game folder
-		DirectoryInfo di = Directory.GetParent(Application.dataPath);
-
-		sourcePath = di.FullName + dsc + EditorCreateAssets.BUILD_DIR + dsc +
-			m_Settings.PackName + EditorCreateAssets.FILE_EXT_MAP;
-
-		File.Copy(sourcePath, targetPath, true);
-
-		string module = m_Settings.GamePath + dsc + GAME_EXECUTABLE;
+		string module = PathCombine(m_Settings.GamePath, GAME_EXECUTABLE);
 		string cmdline = m_Settings.GameRunParams + " +map " + EditorSceneManager.GetActiveScene().name;
 
 		Debug.Log($"Starting game {module} {cmdline}");
@@ -209,6 +231,30 @@ public sealed class EditorSdkWindow : EditorWindow
 		inf.FileName = module;
 		inf.Arguments = cmdline;
 		System.Diagnostics.Process.Start(inf);
+	}
+
+	private void CopyRuntimeAsset(string src, string dst)
+	{
+		DirectoryInfo di = Directory.GetParent(Application.dataPath);
+		string gameExec = PathCombine(m_Settings.GamePath, GAME_EXECUTABLE);
+		string srcBasePath = PathCombine(di.FullName, AssetBuildScript.BUILD_DIR);
+
+		string sourcePath = PathCombine(srcBasePath, src);
+		string destinationPath = PathCombine(m_Settings.GamePath, dst);
+
+		// Check for executable
+		if (!File.Exists(gameExec))
+		{
+			Debug.LogWarning($"Unable to find game executable at '{gameExec}'");
+			return;
+		}
+
+		File.Copy(sourcePath, destinationPath, true);
+	}
+
+	private static string PathCombine(params string[] paths)
+	{
+		return Path.Combine(paths).Replace('\\', '/');
 	}
 
 	private void InitEntityList()

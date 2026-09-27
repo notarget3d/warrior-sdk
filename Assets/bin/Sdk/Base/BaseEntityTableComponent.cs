@@ -59,6 +59,11 @@ namespace WMSDK
 
 		public void SetDirty()
 		{
+			if (UnityEditor.BuildPipeline.isBuildingPlayer)
+			{
+				return;
+			}
+
 			UnityEditor.EditorUtility.SetDirty(gameObject);
 			UnityEditor.EditorUtility.SetDirty(this);
 		}

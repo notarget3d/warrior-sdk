@@ -4,37 +4,14 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEditor;
+using WMSDK;
 
 
 public static class EditorCreateAssets
 {
-	public const string FILE_EXT_MAP = ".u3d";
 	public const string FILE_EXT_SOUND = ".wsd";
-	public const string BUILD_DIR = "AssetBuild";
+	public const string BUILD_DIR = AssetBuildScript.BUILD_DIR;
 
-
-	public static bool BuildSceneAssets(string[] assets, string packName)
-	{
-		List<AssetBundleBuild> list = new List<AssetBundleBuild>();
-
-		list.Add(new AssetBundleBuild()
-		{
-			assetBundleName = packName + FILE_EXT_MAP,
-			assetNames = assets,
-		});
-
-		if (!Directory.Exists(BUILD_DIR))
-		{
-			Directory.CreateDirectory(BUILD_DIR);
-		}
-
-		var manifest = BuildPipeline.BuildAssetBundles(BUILD_DIR, list.ToArray(),
-			BuildAssetBundleOptions.UncompressedAssetBundle |
-			BuildAssetBundleOptions.AssetBundleStripUnityVersion,
-			BuildTarget.StandaloneWindows64);
-
-		return manifest != null;
-	}
 
 	public static void BuildSoundAsset()
 	{
@@ -55,14 +32,7 @@ public static class EditorCreateAssets
 			addressableNames = nameOverride
 		});
 
-		if (!Directory.Exists(BUILD_DIR))
-		{
-			Directory.CreateDirectory(BUILD_DIR);
-		}
-
-		BuildPipeline.BuildAssetBundles(BUILD_DIR, list.ToArray(),
-			BuildAssetBundleOptions.UncompressedAssetBundle | BuildAssetBundleOptions.AssetBundleStripUnityVersion,
-			BuildTarget.StandaloneWindows64);
+		AssetBuildScript.DoBuild(list.ToArray());
 	}
 
 	public static void BuildSoundAssetCustom(string folder, string packName, bool debugPrint = false)
@@ -101,7 +71,7 @@ public static class EditorCreateAssets
 			Debug.Log(msg);
 		}
 
-		AssetBuildUtils.DoBuild(list.ToArray());
+		AssetBuildScript.DoBuild(list.ToArray());
 	}
 
 	public static List<string> FindAssetsPaths<T>(string path, out List<T> obj) where T : Object

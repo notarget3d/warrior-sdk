@@ -138,8 +138,7 @@ public class OBJExporter : ScriptableWizard
         }
         else
         {
-            sceneMeshes = FindObjectsOfType(typeof(MeshFilter)) as MeshFilter[];
-
+			sceneMeshes = FindObjectsByType<MeshFilter>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         }
 
         if (Application.isPlaying)

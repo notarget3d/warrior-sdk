@@ -5,7 +5,7 @@ namespace WMSDK.Assets
 {
 	public enum WeaponAnimType : byte
 	{
-		RIFLE, PISTOL, SHOTGUN, SMG, HEAVY, SHOULDER
+		RIFLE, PISTOL, SHOTGUN, SMG, HEAVY, SHOULDER, HIPFIRE
 	}
 
 

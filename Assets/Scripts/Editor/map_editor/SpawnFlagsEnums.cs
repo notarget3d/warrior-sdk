@@ -78,6 +78,22 @@ public partial class EditorGenericSpawnFlagsDrawer
 	}
 
 	[Flags]
+	public enum trigger_once
+	{
+		StartDisabled = START_DISABLED,
+		AllowNpcs = BASE << 1,
+		AllowPhysicObjects = BASE << 2,
+	}
+
+	[Flags]
+	public enum trigger_multiple
+	{
+		StartDisabled = START_DISABLED,
+		AllowNpcs = BASE << 1,
+		AllowPhysicObjects = BASE << 2,
+	}
+
+	[Flags]
 	public enum func_conveyor
 	{
 		StartDisabled = START_DISABLED,
